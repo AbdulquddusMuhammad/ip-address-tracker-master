@@ -36,7 +36,7 @@ async function ip_And_Domain_Getter(customInput) {
   console.log(data);
   ipDomain.placeholder = ip;
   ipInfo.innerText = ip;
-  locationInfo.innerText = `${data.country}, ${data.city}, ${data.regionName}`;
+  locationInfo.innerText = `${data.country}, ${data.city}, ${data.region}`;
   timezoneInfo.innerText = ` UTC ${data.utc_offset} `;
   if (!data) {
     return;
