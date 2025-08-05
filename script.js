@@ -1,3 +1,5 @@
+const API_KEY = "336a3c9f-4fb8-4c51-ab2e-4c7b613909e5";
+
 const ipDomain = document.querySelector("#ip_domain_input");
 const ipInfo = document.querySelector("#ip_info");
 const locationInfo = document.querySelector("#location_info");
@@ -12,20 +14,23 @@ const customIcon = L.icon({
 });
 
 let response;
+let response2;
 let map;
 
 // alert("jello");
 
 async function ip_And_Domain_Getter(customInput) {
   // response = await fetch(`http://ip-api.com/json/`);
+  let apiUrl = `https://apiip.net/api/check?accessKey=${API_KEY}`;
   if (customInput) {
-    response = await fetch(`https://ipapi.co/${customInput}/json/`);
-  } else {
-    response = await fetch(`https://ipapi.co/json/`);
+    apiUrl += `&ip=${customInput}`;
   }
+
+  response = await fetch(apiUrl);
 
   const data = await response.json();
 
+  console.log(data);
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -36,16 +41,7 @@ async function ip_And_Domain_Getter(customInput) {
   console.log(data);
   ipDomain.placeholder = ip;
   ipInfo.innerText = ip;
-  locationInfo.innerText = `${data.country}, ${data.city}, ${data.region}`;
-  timezoneInfo.innerText = ` UTC ${data.utc_offset} `;
-  if (!data) {
-    return;
-  } else if (data.org.length > 22) {
-    ispInfo.innerText = `${data.org.slice(0, 15)}....`;
-  } else {
-    ispInfo.innerText = data.org;
-  }
-  ispInfo.title = data.org;
+  locationInfo.innerText = `${data.countryName}, ${data.city}, ${data.regionName}`;
 
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -73,3 +69,29 @@ ip_And_Domain_Getter((customInput = null));
 getIpButton.addEventListener("click", function () {
   ip_And_Domain_Getter(ipDomain.value);
 });
+
+async function getIsp() {
+  if (customInput) {
+    response2 = await fetch(`https://ipapi.co/${customInput}/json/`);
+  } else {
+    response2 = await fetch(`https://ipapi.co/json/`);
+  }
+  // alert("reached");
+
+  let data = await response2.json();
+
+  console.log("first");
+  console.log(data);
+  if (!data) {
+    return;
+  } else if (data.org.length > 22) {
+    ispInfo.innerText = `${data.org.slice(0, 15)}....`;
+  } else {
+    ispInfo.innerText = data.org;
+  }
+  ispInfo.title = data.org;
+
+  timezoneInfo.innerText = `UTC ${data.utc_offset}`;
+}
+
+getIsp(customInput);
