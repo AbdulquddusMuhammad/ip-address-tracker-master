@@ -19,9 +19,9 @@ let map;
 async function ip_And_Domain_Getter(customInput) {
   // response = await fetch(`http://ip-api.com/json/`);
   if (customInput) {
-    response = await fetch(`https://ip-api.com/json/${customInput}`);
+    response = await fetch(`https://ipapi.co/${customInput}/json/`);
   } else {
-    response = await fetch(`https://ip-api.com/json/`);
+    response = await fetch(`https://ipapi.co/json/`);
   }
 
   const data = await response.json();
@@ -31,19 +31,21 @@ async function ip_And_Domain_Getter(customInput) {
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-  const ip = data.query;
+  const ip = data.ip;
 
   console.log(data);
   ipDomain.placeholder = ip;
   ipInfo.innerText = ip;
   locationInfo.innerText = `${data.country}, ${data.city}, ${data.regionName}`;
-  timezoneInfo.innerText = `${data.timezone}`;
-  if (data.isp.length > 22) {
-    ispInfo.innerText = `${data.isp.slice(0, 15)}....`;
+  timezoneInfo.innerText = ` UTC ${data.utc_offset} `;
+  if (!data) {
+    return;
+  } else if (data.org.length > 22) {
+    ispInfo.innerText = `${data.org.slice(0, 15)}....`;
   } else {
-    ispInfo.innerText = data.isp;
+    ispInfo.innerText = data.org;
   }
-  ispInfo.title = data.isp;
+  ispInfo.title = data.org;
 
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
@@ -51,13 +53,13 @@ async function ip_And_Domain_Getter(customInput) {
   if (map) {
     map.remove();
   }
-  map = L.map("map").setView([data.lat, data.lon], 8);
+  map = L.map("map").setView([data.latitude, data.longitude], 10);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors",
   }).addTo(map);
 
-  L.marker([data.lat, data.lon], { icon: customIcon }).addTo(map);
+  L.marker([data.latitude, data.longitude], { icon: customIcon }).addTo(map);
 
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
