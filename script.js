@@ -1,6 +1,6 @@
 const ipDomain = document.querySelector("#ip_domain_input");
 const ipInfo = document.querySelector("#ip_info");
-const locationInfo = document.querySelector("#locatio_info");
+const locationInfo = document.querySelector("#location_info");
 const timezoneInfo = document.querySelector("#timezone_info");
 const ispInfo = document.querySelector("#isp_info");
 const getIpButton = document.querySelector("#getIp");
@@ -19,9 +19,9 @@ let map;
 async function ip_And_Domain_Getter(customInput) {
   // response = await fetch(`http://ip-api.com/json/`);
   if (customInput) {
-    response = await fetch(`http://ip-api.com/json/${customInput}`);
+    response = await fetch(`https://ip-api.com/json/${customInput}`);
   } else {
-    response = await fetch(`http://ip-api.com/json/`);
+    response = await fetch(`https://ip-api.com/json/`);
   }
 
   const data = await response.json();
